@@ -21,7 +21,7 @@ const mapDimensions = document.getElementById(MAP_DIMENSIONS)
 const dimensionsContainer=document.getElementById(DIMENSIONS_CONTAINER)
 
 let mapDimensionsVal=0
-
+let internalId
 let fieldsArr=[]
 
 const getDimensionsValueFromInput=()=>{
@@ -59,9 +59,7 @@ const mapGenerator=()=>{
     } 
 }
 
-
-const nextMove=()=>{
-    
+const nextMove=()=>{ 
     const newFieldsState=Array.from(Array(mapDimensionsVal), () => new Array(mapDimensionsVal).fill(false))
   
     const allFields=document.querySelectorAll(".field");
@@ -72,8 +70,9 @@ const nextMove=()=>{
         }
     })
 
+    let neighborCount=0
     for(let i=0;i<mapDimensionsVal;++i){
-        let neighborCount=0
+        
         for(let j=0;j<mapDimensionsVal;++j){
 
             if(i-1>=0){
@@ -108,12 +107,16 @@ const nextMove=()=>{
                 } 
             }
 
-            if(fieldsArr[i][j+1]===true){
-                neighborCount++;
+            if(j+1<mapDimensionsVal){
+                if(fieldsArr[i][j+1]===true){
+                    neighborCount++;        
+                }
             }
 
-            if(fieldsArr[i][j-1]===true){
-                neighborCount++;
+            if(j-1>=0){
+                if(fieldsArr[i][j-1]===true){
+                    neighborCount++;
+                }
             }
 
             if((neighborCount===3||neighborCount===2)&& fieldsArr[i][j]===true){
@@ -121,6 +124,8 @@ const nextMove=()=>{
             }else if(neighborCount===3){
                 newFieldsState[i][j]=true
             }
+
+            neighborCount=0
         }    
     }
 
@@ -132,11 +137,21 @@ const nextMove=()=>{
             }
         }
     }
-    console.log("oryginal:")
-    console.log(fieldsArr)
-    console.log("kopia:")
-    console.log(newFieldsState)
+    
+    invokeStopAutoGameIfNoChanges(fieldsArr,newFieldsState)
     fieldsArr=newFieldsState
+}
+
+const invokeStopAutoGameIfNoChanges=(original,newArr)=>{
+    for(let i=0;i<mapDimensionsVal;++i){
+        for(let j=0;j<mapDimensionsVal;++j){
+            if(original[i][j]!=newArr[i][j]){
+                return;
+            }
+        }
+    }
+    stopAutoGame()
+    alert("The game is over")
 }
 
 const newGame=()=>{
@@ -171,11 +186,11 @@ const resetGame=()=>{
 }
 
 const startAutoGame=()=>{
-    setInterval(nextMove,1000)
+    intervalId=setInterval(nextMove,1000)
 }
 
 const stopAutoGame=()=>{
-    clearInterval()
+    clearInterval(intervalId)
 }
 
 startGameBtn.addEventListener('click',newGame)
