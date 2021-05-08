@@ -16,30 +16,49 @@ const dimensionsContainer=document.getElementById(DIMENSIONS_CONTAINER)
 
 let mapDimensionsVal=0
 
-const fieldsArr=[];
+let fieldsArr=[]
 
 const getDimensionsValueFromInput=()=>{
     mapDimensionsVal=Number(mapDimensions.value)
 }
 
 const addRemoveCell=e=>{
+
+    const i= Number(e.target.getAttribute('i'))
+    const j= Number(e.target.getAttribute('j'))
+
     if(e.target.classList.contains(CELL)){
         e.target.classList.remove(CELL)
+        fieldsArr[i][j]=false
     }else{
         e.target.className+= ' ' + CELL
+        fieldsArr[i][j]=true
     }  
 }
 
 const mapGenerator=()=>{
+    fieldsArr= Array.from(Array(mapDimensionsVal), () => new Array(mapDimensionsVal));
+
     const mapHeight=map.clientHeight/mapDimensionsVal + 'px'
-    for(let i=0;i<mapDimensionsVal*mapDimensionsVal;++i){
-        const div=document.createElement(`div`)
-        div.className=FIELD
-        div.style.flexBasis=100/mapDimensionsVal +'%'
-        div.style.height= mapHeight
-        div.addEventListener('click',addRemoveCell)
-        map.append(div)
+    for(let i=0;i<mapDimensionsVal;++i){
+        for(let j=0;j<mapDimensionsVal;j++){
+            fieldsArr[i][j]=false
+            
+            const div=document.createElement(`div`)
+            div.className=FIELD
+            div.setAttribute("i",i)
+            div.setAttribute("j",j)
+            div.style.flexBasis=100/mapDimensionsVal +'%'
+            div.style.height= mapHeight
+            div.addEventListener('click',addRemoveCell)
+            
+            map.append(div)
+        }
     } 
+}
+
+const nextMove=()=>{
+
 }
 
 const newGame=()=>{
