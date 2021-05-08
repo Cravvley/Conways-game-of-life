@@ -91,6 +91,17 @@
     transform: translate(-50%, -15%);
 }
 
+#randomMapFill {
+    position: absolute;
+    left: 55%;
+    top: 46%;
+}
+
+#randomInputLabel {
+    color: skyblue;
+    font-size: 20px;
+}
+
 .field {
     flex-grow: 1;
     border: 2px black solid;

@@ -9,6 +9,7 @@ const RESET_GAME="resetGame"
 const NEXT_MOVE="nextMove"
 const START_AUTO_GAME="startAutoGame"
 const STOP_AUTO_GAME="stopAutoGame"
+const RANDOM_MAP_FILL="randomMapFill"
 
 const startGameBtn=document.getElementById(NEW_GAME)
 const resetGameBtn=document.getElementById(RESET_GAME)
@@ -19,6 +20,7 @@ const map=document.getElementById(GAME_BOARD)
 const gameName = document.getElementById(GAME_NAME)
 const mapDimensions = document.getElementById(MAP_DIMENSIONS)
 const dimensionsContainer=document.getElementById(DIMENSIONS_CONTAINER)
+const randomMapFill=document.getElementById(RANDOM_MAP_FILL)
 
 let mapDimensionsVal=0
 let internalId
@@ -41,12 +43,20 @@ const addRemoveCell=e=>{
     }  
 }
 
-const mapGenerator=()=>{
+const mapGenerator=(random)=>{
     const mapHeight=map.clientHeight/mapDimensionsVal + 'px'
     for(let i=0;i<mapDimensionsVal;++i){
         for(let j=0;j<mapDimensionsVal;j++){  
             const div=document.createElement(`div`)
             div.className=FIELD
+
+            if(random){
+                if(Math.floor(Math.random()*5)===0){
+                    div.classList.add(CELL)
+                    fieldsArr[i][j]=true
+                }
+            }
+
             div.setAttribute("i",i)
             div.setAttribute("j",j)
             div.style.flexBasis=100/mapDimensionsVal +'%'
@@ -137,7 +147,7 @@ const nextMove=()=>{
             }
         }
     }
-    
+
     invokeStopAutoGameIfNoChanges(fieldsArr,newFieldsState)
     fieldsArr=newFieldsState
 }
@@ -161,12 +171,15 @@ const newGame=()=>{
         stopAutoGameBtn.style.visibility="visible"
         resetGameBtn.style.visibility="visible"
         nextMoveBtn.style.visibility="visible"
-        startGameBtn.style.visibility="hidden"        
+        startGameBtn.style.visibility="hidden"  
+        randomMapFill.style.visibility="hidden"       
         
         gameName.style.visibility="hidden"
         dimensionsContainer.style.visibility="hidden"
         fieldsArr=Array.from(Array(mapDimensionsVal), () => new Array(mapDimensionsVal).fill(false))
-        mapGenerator()
+
+        const isRand=document.getElementById("randomInput").checked;
+        mapGenerator(isRand)
     }
     else{
         alert("Map is too small or too big, type value between three or sixty-five")
@@ -182,6 +195,7 @@ const resetGame=()=>{
     stopAutoGameBtn.style.visibility="hidden"
     startGameBtn.style.visibility="visible"
     gameName.style.visibility="visible"
+    randomMapFill.style.visibility="visible" 
     dimensionsContainer.style.visibility="visible"
 }
 
