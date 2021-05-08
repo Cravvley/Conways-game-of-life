@@ -70,6 +70,27 @@
     transform: translate(-50%, -80%);
 }
 
+#nextMove {
+    visibility: hidden;
+    left: 40%;
+    top: 5%;
+    transform: translate(-50%, -15%);
+}
+
+#startAutoGame {
+    visibility: hidden;
+    left: 50%;
+    top: 5%;
+    transform: translate(-50%, -15%);
+}
+
+#stopAutoGame {
+    visibility: hidden;
+    left: 60%;
+    top: 5%;
+    transform: translate(-50%, -15%);
+}
+
 .field {
     flex-grow: 1;
     border: 2px black solid;
