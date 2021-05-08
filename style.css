@@ -47,12 +47,10 @@
 }
 
 #mapDimensionsLabel {
-    font-size: 30px;
-    color: skyblue;
     margin-right: 15px;
 }
 
-#mapDimensions {
+.inputPadding {
     padding: 5px 15px;
 }
 
@@ -97,9 +95,16 @@
     top: 46%;
 }
 
-#randomInputLabel {
+.inputLabel {
     color: skyblue;
-    font-size: 20px;
+    font-size: 25px;
+}
+
+#howManyMovesAtOnceContainer {
+    visibility: hidden;
+    position: absolute;
+    left: 5%;
+    top: 5%;
 }
 
 .field {
