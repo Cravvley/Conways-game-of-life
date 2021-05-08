@@ -11,8 +11,14 @@
 </head>
 
 <body>
-    <main class="gameBoard">
-        <div class="cell"></div>
+    <form id="dimensionsContainer">
+        <label for="mapDimensions" id="mapDimensionsLabel">Map dimensions:</label>
+        <input type="number" name="mapDimensions" id="mapDimensions">
+    </form>
+    <h1 id="gameName">Conway's game of life</h1>
+    <button id="startGame" class="btn">startGame</button>
+    <button id="resetGame" class="btn">resetGame</button>
+    <main id="gameBoard">
     </main>
 </body>
 

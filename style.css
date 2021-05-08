@@ -1,6 +1,77 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#gameBoard {
+    visibility: hidden;
+    position: absolute;
+    display: flex;
+    align-content: flex-start;
+    flex-wrap: wrap;
+    height: 75vh;
+    width: 75vh;
+    border: 5px gray solid;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#gameName {
+    text-align: center;
+    color: rgb(200, 135, 49);
+    font-size: 50px;
+}
+
+.btn {
+    position: absolute;
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.btn:hover {
+    background-color: #deb887;
+}
+
+#dimensionsContainer {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -20%);
+}
+
+#mapDimensionsLabel {
+    font-size: 30px;
+    color: skyblue;
+    margin-right: 15px;
+}
+
+#mapDimensions {
+    padding: 5px 15px;
+}
+
+#startGame {
+    visibility: visible;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -95%);
+}
+
+#resetGame {
+    visibility: hidden;
+    left: 50%;
+    top: 95%;
+    transform: translate(-50%, -80%);
+}
+
 .field {
-    width: 50px;
-    height: 50px;
+    flex-grow: 1;
     border: 2px black solid;
 }
 
