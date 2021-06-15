@@ -73,7 +73,6 @@ const mapGenerator=(random)=>{
 }
 
 const nextMove=()=>{ 
-    
     let howManyMoves=Number(howManyMovesAtOnceInput.value)
    
     for(let i=0;i<howManyMoves;++i){
@@ -154,8 +153,7 @@ const nextMove=()=>{
         if(invokeStopAutoGameIfNoChanges(fieldsArr,newFieldsState)){
             return
         }
-        fieldsArr=newFieldsState
-        
+        fieldsArr=newFieldsState  
     }
 }
 
