@@ -1,116 +1,367 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* ═══════════════════════════════════════════════════════════════
+   Conway's Game of Life — Design System
+   ═══════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@300;500;700&display=swap');
+
+:root {
+  /* Palette — dark terminal / sci-fi */
+  --bg-deep: #0a0e14;
+  --bg-surface: #12171e;
+  --bg-elevated: #1a2029;
+  --bg-input: #0d1117;
+  
+  --border-subtle: rgba(99, 179, 237, 0.15);
+  --border-focus: rgba(99, 179, 237, 0.5);
+  
+  --text-primary: #e6edf3;
+  --text-secondary: #8b949e;
+  --text-muted: #6e7681;
+  
+  --accent-cyan: #39c5cf;
+  --accent-emerald: #3fb950;
+  --accent-amber: #d29922;
+  --accent-rose: #f85149;
+  
+  --cell-alive: #3fb950;
+  --cell-alive-glow: rgba(63, 185, 80, 0.4);
+  --cell-dead: #161b22;
+  --cell-border: rgba(99, 179, 237, 0.12);
+  
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 9999px;
+  
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 20px var(--cell-alive-glow);
+  
+  --transition-fast: 0.15s ease;
+  --transition-smooth: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-#gameBoard {
-    visibility: hidden;
-    position: absolute;
-    display: flex;
-    align-content: flex-start;
-    flex-wrap: wrap;
-    height: 75vh;
-    width: 75vh;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+/* ═══════════════════════════════════════════════════════════════
+   Reset & Base
+   ═══════════════════════════════════════════════════════════════ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: 'Outfit', system-ui, sans-serif;
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image: 
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(57, 197, 207, 0.08), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 100%, rgba(63, 185, 80, 0.05), transparent);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Typography
+   ═══════════════════════════════════════════════════════════════ */
 
 #gameName {
-    text-align: center;
-    color: rgb(200, 135, 49);
-    font-size: 50px;
+  position: absolute;
+  left: 50%;
+  top: 18%;
+  transform: translate(-50%, -50%);
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: clamp(2rem, 5vw, 3.25rem);
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  text-shadow: 0 0 40px rgba(57, 197, 207, 0.2);
+  text-align: center;
 }
 
-.btn {
-    position: absolute;
-    background-color: #4CAF50;
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    font-size: 16px;
-}
+/* ═══════════════════════════════════════════════════════════════
+   Forms & Inputs
+   ═══════════════════════════════════════════════════════════════ */
 
-.btn:hover {
-    background-color: #deb887;
-}
-
-#dimensionsContainer {
-    position: absolute;
-    top: 20%;
-    left: 50%;
-    transform: translate(-50%, -20%);
-}
-
-#mapDimensionsLabel {
-    margin-right: 15px;
+.inputLabel {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-right: 12px;
 }
 
 .inputPadding {
-    padding: 5px 15px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  padding: 10px 16px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-#startGame {
-    visibility: visible;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -95%);
+.inputPadding:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(57, 197, 207, 0.15);
 }
 
-#resetGame {
-    visibility: hidden;
-    left: 50%;
-    top: 95%;
-    transform: translate(-50%, -80%);
+.inputPadding::placeholder {
+  color: var(--text-muted);
 }
 
-#nextMove {
-    visibility: hidden;
-    left: 40%;
-    top: 5%;
-    transform: translate(-50%, -15%);
+#dimensionsContainer {
+  position: absolute;
+  top: 32%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-#startAutoGame {
-    visibility: hidden;
-    left: 50%;
-    top: 5%;
-    transform: translate(-50%, -15%);
-}
-
-#stopAutoGame {
-    visibility: hidden;
-    left: 60%;
-    top: 5%;
-    transform: translate(-50%, -15%);
-}
-
-#randomMapFill {
-    position: absolute;
-    left: 55%;
-    top: 46%;
-}
-
-.inputLabel {
-    color: skyblue;
-    font-size: 25px;
+#mapDimensionsLabel {
+  margin-right: 0;
 }
 
 #howManyMovesAtOnceContainer {
-    visibility: hidden;
-    position: absolute;
-    left: 5%;
-    top: 5%;
+  visibility: hidden;
+  position: absolute;
+  left: 5%;
+  top: 5%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   Buttons
+   ═══════════════════════════════════════════════════════════════ */
+
+.btn {
+  position: absolute;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding: 12px 24px;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-smooth);
+  text-transform: lowercase;
+  letter-spacing: 0.02em;
+}
+
+#startGame {
+  visibility: visible;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(135deg, var(--accent-cyan), #2a9d8f);
+  color: var(--bg-deep);
+  box-shadow: var(--shadow-md), 0 0 30px rgba(57, 197, 207, 0.25);
+}
+
+#startGame:hover {
+  transform: translate(-50%, -50%) scale(1.03);
+  box-shadow: var(--shadow-md), 0 0 40px rgba(57, 197, 207, 0.4);
+}
+
+#resetGame {
+  visibility: hidden;
+  left: 50%;
+  top: 95%;
+  transform: translate(-50%, -80%);
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
+
+#resetGame:hover {
+  color: var(--accent-rose);
+  border-color: rgba(248, 81, 73, 0.4);
+  background: rgba(248, 81, 73, 0.08);
+}
+
+#nextMove {
+  visibility: hidden;
+  left: 40%;
+  top: 5%;
+  transform: translate(-50%, -15%);
+  background: var(--accent-emerald);
+  color: var(--bg-deep);
+}
+
+#nextMove:hover {
+  background: #4ade80;
+  box-shadow: 0 0 20px rgba(63, 185, 80, 0.35);
+}
+
+#startAutoGame {
+  visibility: hidden;
+  left: 50%;
+  top: 5%;
+  transform: translate(-50%, -15%);
+  background: var(--accent-cyan);
+  color: var(--bg-deep);
+}
+
+#startAutoGame:hover {
+  background: #5ce1e6;
+  box-shadow: 0 0 20px rgba(57, 197, 207, 0.4);
+}
+
+#stopAutoGame {
+  visibility: hidden;
+  left: 60%;
+  top: 5%;
+  transform: translate(-50%, -15%);
+  background: var(--accent-rose);
+  color: white;
+}
+
+#stopAutoGame:hover {
+  background: #ff6b6b;
+  box-shadow: 0 0 20px rgba(248, 81, 73, 0.4);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Random Map Fill
+   ═══════════════════════════════════════════════════════════════ */
+
+#randomMapFill {
+  position: absolute;
+  left: 50%;
+  top: 42%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#randomMapFill input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent-cyan);
+  cursor: pointer;
+}
+
+#randomInputLabel {
+  cursor: pointer;
+  user-select: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Game Board
+   ═══════════════════════════════════════════════════════════════ */
+
+#gameBoard {
+  visibility: hidden;
+  position: absolute;
+  display: flex;
+  align-content: flex-start;
+  flex-wrap: wrap;
+  height: min(75vh, 75vw);
+  width: min(75vh, 75vw);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Cells
+   ═══════════════════════════════════════════════════════════════ */
+
 .field {
-    flex-grow: 1;
-    border: 2px black solid;
+  flex-grow: 1;
+  border: 1px solid var(--cell-border);
+  background: var(--cell-dead);
+  transition: background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.field:hover {
+  background: rgba(26, 32, 41, 0.9);
 }
 
 .cell {
-    background-color: greenyellow;
+  background: var(--cell-alive) !important;
+  box-shadow: var(--shadow-glow), inset 0 0 20px rgba(63, 185, 80, 0.2);
+}
+
+.cell:hover {
+  box-shadow: 0 0 25px var(--cell-alive-glow), inset 0 0 20px rgba(63, 185, 80, 0.25);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Responsive
+   ═══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  #gameName {
+    font-size: 1.75rem;
+    top: 15%;
+  }
+
+  #dimensionsContainer {
+    top: 28%;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #randomMapFill {
+    top: 38%;
+  }
+
+  #startGame {
+    padding: 14px 28px;
+    font-size: 0.95rem;
+  }
+
+  #gameBoard {
+    height: min(70vh, 80vw);
+    width: min(70vh, 80vw);
+  }
+
+  #nextMove {
+    left: 35%;
+  }
+
+  #startAutoGame {
+    left: 50%;
+  }
+
+  #stopAutoGame {
+    left: 65%;
+  }
+}
+
+@media (max-width: 480px) {
+  .inputLabel {
+    font-size: 0.85rem;
+  }
+
+  .inputPadding {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+
+  .btn {
+    padding: 10px 18px;
+    font-size: 0.8rem;
+  }
 }
