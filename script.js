@@ -4,6 +4,7 @@ const FIELD='field'
 const GAME_NAME='gameName'
 const MAP_DIMENSIONS='mapDimensions'
 const START_SCREEN="startScreen"
+const GAME_TOOLBAR="gameToolbar"
 const NEW_GAME="startGame"
 const RESET_GAME="resetGame"
 const NEXT_MOVE="nextMove"
@@ -22,6 +23,7 @@ const map=document.getElementById(GAME_BOARD)
 const gameName = document.getElementById(GAME_NAME)
 const mapDimensions = document.getElementById(MAP_DIMENSIONS)
 const startScreenEl=document.getElementById(START_SCREEN)
+const gameToolbar=document.getElementById(GAME_TOOLBAR)
 const howManyMovesAtOnceContainer=document.getElementById(HOW_MANY_MOVES_AT_ONCE_CONTIANER)
 const howManyMovesAtOnceInput=document.getElementById(HOW_MANY_MOVES_AT_ONCE_INPUT)
 
@@ -220,14 +222,10 @@ const newGame=()=>{
         const counterEl=document.getElementById('generationCounter')
         if(counterEl) counterEl.textContent='Gen: 0'
         const gameControls=document.getElementById('gameControls')
-        if(gameControls) gameControls.style.visibility="visible"
         map.style.visibility="visible"
-        startAutoGameBtn.style.visibility="visible"
-        stopAutoGameBtn.style.visibility="visible"
-        howManyMovesAtOnceContainer.style.visibility="visible"
         resetGameBtn.style.visibility="visible"
-        nextMoveBtn.style.visibility="visible"
         if(startScreenEl) startScreenEl.style.display="none"
+        if(gameToolbar) gameToolbar.style.display="flex"
         howManyMovesAtOnceInput.value=1
         fieldsArr=Array.from(Array(mapDimensionsVal), () => new Array(mapDimensionsVal).fill(false))
         const isRand=document.getElementById("randomInput").checked;
@@ -241,14 +239,9 @@ const newGame=()=>{
 const resetGame=()=>{
     hideGameOver()
     map.innerHTML=''
-    const gameControls=document.getElementById('gameControls')
-    if(gameControls) gameControls.style.visibility="hidden"
     map.style.visibility="hidden"
     resetGameBtn.style.visibility="hidden"
-    nextMoveBtn.style.visibility="hidden"
-    startAutoGameBtn.style.visibility="hidden"
-    stopAutoGameBtn.style.visibility="hidden"
-    howManyMovesAtOnceContainer.style.visibility="hidden"
+    if(gameToolbar) gameToolbar.style.display="none"
     if(startScreenEl) startScreenEl.style.display="flex"
     clearInterval(intervalId);
 }

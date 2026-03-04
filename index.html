@@ -26,18 +26,22 @@
             <button id="startGame" class="btn btn-primary">Start</button>
         </div>
     </div>
-    <form id="howManyMovesAtOnceContainer">
-        <label for="howManyMovesAtOnceInput" id="howManyMovesAtOnceLabel" class="inputLabel">Moves per step:</label>
-        <input type="number" name="howManyMovesAtOnceInput" class="inputPadding" id="howManyMovesAtOnceInput" min="1" max="100" placeholder="1">
-    </form>
-    <button id="resetGame" class="btn">reset game</button>
-    <button id="nextMove" class="btn">next move</button>
-    <button id="startAutoGame" class="btn">start auto game</button>
-    <button id="stopAutoGame" class="btn">stop auto game</button>
-    <button id="themeBtn" class="btn-icon btn-icon-fixed" title="Change theme">◐</button>
-    <div id="gameControls">
-        <span id="generationCounter">Gen: 0</span>
+    <div id="gameToolbar">
+        <div id="gameControls">
+            <span id="generationCounter">Gen: 0</span>
+        </div>
+        <form id="howManyMovesAtOnceContainer">
+            <label for="howManyMovesAtOnceInput" id="howManyMovesAtOnceLabel" class="inputLabel">Step:</label>
+            <input type="number" name="howManyMovesAtOnceInput" class="inputPadding" id="howManyMovesAtOnceInput" min="1" max="100" placeholder="1">
+        </form>
+        <div class="toolbar-buttons">
+            <button id="nextMove" class="btn">next</button>
+            <button id="startAutoGame" class="btn">auto</button>
+            <button id="stopAutoGame" class="btn">stop</button>
+        </div>
     </div>
+    <button id="resetGame" class="btn">reset game</button>
+    <button id="themeBtn" class="btn-icon btn-icon-fixed" title="Change theme">◐</button>
     <main id="gameBoard">
     </main>
     <div id="gameOverOverlay" class="overlay" aria-hidden="true">
