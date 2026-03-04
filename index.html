@@ -11,7 +11,20 @@
 
 <body>
     <div id="startScreen">
-        <h1 id="gameName">Conway's Game of Life</h1>
+        <div class="title-row">
+            <h1 id="gameName">Conway's Game of Life</h1>
+            <div class="help-wrapper">
+                <button id="helpBtn" class="btn-icon btn-help" type="button" aria-label="How to play">?</button>
+                <div id="tooltipBackdrop" class="tooltip-backdrop" aria-hidden="true"></div>
+                <div id="helpTooltip" class="tooltip" role="tooltip">
+                <strong>How to play</strong>
+                <p><b>Start:</b> Set grid size (3–65), optionally check Random fill, click Start.</p>
+                <p><b>Controls:</b> <i>next</i> — advance; <i>auto</i> — run; <i>stop</i> — pause. Step = generations per click.</p>
+                <p><b>Edit:</b> Click cells to toggle alive/dead (when paused).</p>
+                <p><b>Rules:</b> Dead + 3 neighbors → alive. Alive + 2 or 3 → stays. Otherwise → dies.</p>
+                </div>
+            </div>
+        </div>
         <div id="setupCard">
             <div class="setup-row">
                 <label for="mapDimensions" id="mapDimensionsLabel" class="inputLabel">Grid size</label>

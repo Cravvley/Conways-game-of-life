@@ -268,6 +268,21 @@ document.getElementById('gameOverOverlay')?.addEventListener('click',e=>{
     if(e.target.id==='gameOverOverlay') hideGameOver()
 })
 document.getElementById('themeBtn')?.addEventListener('click',cycleTheme)
+
+const helpBtn=document.getElementById('helpBtn')
+const helpTooltip=document.getElementById('helpTooltip')
+const tooltipBackdrop=document.getElementById('tooltipBackdrop')
+const helpWrapper=document.querySelector('.help-wrapper')
+if(helpBtn&&helpTooltip&&helpWrapper){
+    const toggleTooltip=()=>{
+        helpTooltip.classList.toggle('visible')
+        helpWrapper.classList.toggle('tooltip-open',helpTooltip.classList.contains('visible'))
+    }
+    helpBtn.addEventListener('click',toggleTooltip)
+    helpWrapper.addEventListener('mouseenter',()=>{ helpTooltip.classList.add('visible'); helpWrapper.classList.add('tooltip-open') })
+    helpWrapper.addEventListener('mouseleave',()=>{ helpTooltip.classList.remove('visible'); helpWrapper.classList.remove('tooltip-open') })
+    tooltipBackdrop?.addEventListener('click',()=>{ helpTooltip.classList.remove('visible'); helpWrapper.classList.remove('tooltip-open') })
+}
 nextMoveBtn.addEventListener('click',nextMove)
 mapDimensions.addEventListener('change',getDimensionsValueFromInput)
 mapDimensions.addEventListener('input',()=>hideDimensionsError())
