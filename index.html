@@ -4,32 +4,48 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <link rel="stylesheet" href="./style.css">
-    <title>Game of life</title>
+    <title>Conway's Game of Life</title>
 </head>
 
 <body>
-    <form id="dimensionsContainer">
-        <label for="mapDimensions" id="mapDimensionsLabel" class="inputLabel">Map dimensions:</label>
-        <input type="number" name="mapDimensions" class="inputPadding" id="mapDimensions">
-    </form>
+    <div id="startScreen">
+        <h1 id="gameName">Conway's Game of Life</h1>
+        <div id="setupCard">
+            <div class="setup-row">
+                <label for="mapDimensions" id="mapDimensionsLabel" class="inputLabel">Grid size</label>
+                <input type="number" name="mapDimensions" class="inputPadding" id="mapDimensions" min="3" max="65" placeholder="20">
+                <span class="input-hint">3–65</span>
+            </div>
+            <span id="dimensionsError" class="error-msg" aria-live="polite"></span>
+            <label class="checkbox-row" id="randomMapFill">
+                <input type="checkbox" id="randomInput" name="random" checked>
+                <span class="checkbox-label">Random fill</span>
+            </label>
+            <button id="startGame" class="btn btn-primary">Start</button>
+        </div>
+    </div>
     <form id="howManyMovesAtOnceContainer">
-        <label for="howManyMovesAtOnceInput" id="howManyMovesAtOnceLabel" class="inputLabel">how many moves at once:</label>
-        <input type="number" name="howManyMovesAtOnceInput" class="inputPadding" id="howManyMovesAtOnceInput">
+        <label for="howManyMovesAtOnceInput" id="howManyMovesAtOnceLabel" class="inputLabel">Moves per step:</label>
+        <input type="number" name="howManyMovesAtOnceInput" class="inputPadding" id="howManyMovesAtOnceInput" min="1" max="100" placeholder="1">
     </form>
-    <h1 id="gameName">Conway's game of life</h1>
-    <button id="startGame" class="btn">start game</button>
     <button id="resetGame" class="btn">reset game</button>
     <button id="nextMove" class="btn">next move</button>
     <button id="startAutoGame" class="btn">start auto game</button>
     <button id="stopAutoGame" class="btn">stop auto game</button>
-    <div id="randomMapFill">
-        <input type="checkbox" id="randomInput" name="random" checked>
-        <label for="randomInput" id="randomInputLabel" class="inputLabel">Random map fill</label>
+    <button id="themeBtn" class="btn-icon btn-icon-fixed" title="Change theme">◐</button>
+    <div id="gameControls">
+        <span id="generationCounter">Gen: 0</span>
     </div>
     <main id="gameBoard">
     </main>
+    <div id="gameOverOverlay" class="overlay" aria-hidden="true">
+        <div class="overlay-content">
+            <p id="gameOverText">Simulation complete</p>
+            <button id="gameOverClose" class="btn">Continue</button>
+        </div>
+    </div>
 </body>
 <script src="script.js" type="text/javascript"></script>
 </html>

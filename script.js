@@ -3,7 +3,7 @@ const CELL='cell'
 const FIELD='field'
 const GAME_NAME='gameName'
 const MAP_DIMENSIONS='mapDimensions'
-const DIMENSIONS_CONTAINER="dimensionsContainer"
+const START_SCREEN="startScreen"
 const NEW_GAME="startGame"
 const RESET_GAME="resetGame"
 const NEXT_MOVE="nextMove"
@@ -21,14 +21,14 @@ const stopAutoGameBtn=document.getElementById(STOP_AUTO_GAME)
 const map=document.getElementById(GAME_BOARD)
 const gameName = document.getElementById(GAME_NAME)
 const mapDimensions = document.getElementById(MAP_DIMENSIONS)
-const dimensionsContainer=document.getElementById(DIMENSIONS_CONTAINER)
-const randomMapFill=document.getElementById(RANDOM_MAP_FILL)
+const startScreenEl=document.getElementById(START_SCREEN)
 const howManyMovesAtOnceContainer=document.getElementById(HOW_MANY_MOVES_AT_ONCE_CONTIANER)
 const howManyMovesAtOnceInput=document.getElementById(HOW_MANY_MOVES_AT_ONCE_INPUT)
 
 let mapDimensionsVal=0
 let intervalId
 let fieldsArr=[]
+let generationCount=0
 
 const getDimensionsValueFromInput=()=>{
     mapDimensionsVal=Number(mapDimensions.value)
@@ -73,7 +73,7 @@ const mapGenerator=(random)=>{
 }
 
 const nextMove=()=>{ 
-    let howManyMoves=Number(howManyMovesAtOnceInput.value)
+    let howManyMoves=Math.max(1,Math.min(100,Number(howManyMovesAtOnceInput.value)||1))
    
     for(let i=0;i<howManyMoves;++i){
         const newFieldsState=Array.from(Array(mapDimensionsVal), () => new Array(mapDimensionsVal).fill(false))
@@ -153,7 +153,10 @@ const nextMove=()=>{
         if(invokeStopAutoGameIfNoChanges(fieldsArr,newFieldsState)){
             return
         }
-        fieldsArr=newFieldsState  
+        fieldsArr=newFieldsState
+        generationCount++
+        const counterEl=document.getElementById('generationCounter')
+        if(counterEl) counterEl.textContent='Gen: '+generationCount
     }
 }
 
@@ -166,43 +169,87 @@ const invokeStopAutoGameIfNoChanges=(original,newArr)=>{
         }
     }
     stopAutoGame()
-    alert("The game is over")
+    showGameOver()
+}
+
+const showGameOver=()=>{
+    const overlay=document.getElementById('gameOverOverlay')
+    const text=document.getElementById('gameOverText')
+    if(overlay&&text){
+        text.textContent='Simulation complete — no more changes'
+        overlay.classList.add('visible')
+        overlay.setAttribute('aria-hidden','false')
+    }
+}
+
+const hideGameOver=()=>{
+    const overlay=document.getElementById('gameOverOverlay')
+    if(overlay){
+        overlay.classList.remove('visible')
+        overlay.setAttribute('aria-hidden','true')
+    }
+}
+
+const showDimensionsError=(msg)=>{
+    const el=document.getElementById('dimensionsError')
+    const input=document.getElementById(MAP_DIMENSIONS)
+    if(el){
+        el.textContent=msg
+        el.classList.add('visible')
+    }
+    if(input) input.classList.add('error')
+}
+
+const hideDimensionsError=()=>{
+    const el=document.getElementById('dimensionsError')
+    const input=document.getElementById(MAP_DIMENSIONS)
+    if(el){
+        el.textContent=''
+        el.classList.remove('visible')
+    }
+    if(input) input.classList.remove('error')
 }
 
 const newGame=()=>{
-    if(mapDimensionsVal>=3 && mapDimensionsVal<=65){
+    getDimensionsValueFromInput()
+    hideDimensionsError()
+    const val=Number(mapDimensions.value)
+    if(val>=3 && val<=65){
+        mapDimensionsVal=val
+        generationCount=0
+        const counterEl=document.getElementById('generationCounter')
+        if(counterEl) counterEl.textContent='Gen: 0'
+        const gameControls=document.getElementById('gameControls')
+        if(gameControls) gameControls.style.visibility="visible"
         map.style.visibility="visible"
         startAutoGameBtn.style.visibility="visible"
         stopAutoGameBtn.style.visibility="visible"
         howManyMovesAtOnceContainer.style.visibility="visible"
         resetGameBtn.style.visibility="visible"
         nextMoveBtn.style.visibility="visible"
-        startGameBtn.style.visibility="hidden"  
-        randomMapFill.style.visibility="hidden"       
+        if(startScreenEl) startScreenEl.style.display="none"
         howManyMovesAtOnceInput.value=1
-        gameName.style.visibility="hidden"
-        dimensionsContainer.style.visibility="hidden"
         fieldsArr=Array.from(Array(mapDimensionsVal), () => new Array(mapDimensionsVal).fill(false))
         const isRand=document.getElementById("randomInput").checked;
         mapGenerator(isRand)
     }
     else{
-        alert("Map is too small or too big, type value between three or sixty-five")
+        showDimensionsError('Enter a value between 3 and 65')
     }
 }
 
 const resetGame=()=>{
+    hideGameOver()
     map.innerHTML=''
+    const gameControls=document.getElementById('gameControls')
+    if(gameControls) gameControls.style.visibility="hidden"
     map.style.visibility="hidden"
     resetGameBtn.style.visibility="hidden"
     nextMoveBtn.style.visibility="hidden"
     startAutoGameBtn.style.visibility="hidden"
     stopAutoGameBtn.style.visibility="hidden"
     howManyMovesAtOnceContainer.style.visibility="hidden"
-    startGameBtn.style.visibility="visible"
-    gameName.style.visibility="visible"
-    randomMapFill.style.visibility="visible" 
-    dimensionsContainer.style.visibility="visible"
+    if(startScreenEl) startScreenEl.style.display="flex"
     clearInterval(intervalId);
 }
 
@@ -214,9 +261,22 @@ const stopAutoGame=()=>{
     clearInterval(intervalId)
 }
 
+const cycleTheme=()=>{
+    const themes=['dark','matrix','coral','light']
+    const current=document.body.dataset.theme||'dark'
+    const idx=(themes.indexOf(current)+1)%themes.length
+    document.body.dataset.theme=themes[idx]
+}
+
 startGameBtn.addEventListener('click',newGame)
-resetGameBtn.addEventListener('click',resetGame)
+resetGameBtn.addEventListener('click',()=>{ hideGameOver(); resetGame() })
+document.getElementById('gameOverClose')?.addEventListener('click',hideGameOver)
+document.getElementById('gameOverOverlay')?.addEventListener('click',e=>{
+    if(e.target.id==='gameOverOverlay') hideGameOver()
+})
+document.getElementById('themeBtn')?.addEventListener('click',cycleTheme)
 nextMoveBtn.addEventListener('click',nextMove)
 mapDimensions.addEventListener('change',getDimensionsValueFromInput)
+mapDimensions.addEventListener('input',()=>hideDimensionsError())
 startAutoGameBtn.addEventListener('click',startAutoGame)
 stopAutoGameBtn.addEventListener('click',stopAutoGame)
